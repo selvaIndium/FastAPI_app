@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI,Path
 from typing import Optional
 import datetime
 
@@ -30,11 +30,11 @@ class BookRequest(BaseModel):
     published_date: int = Field(ge=1900, le=datetime.date.today().year)
 
 BOOKS = [
-    Book(1, 'Computer Science Pro', 'codingwithselva', 'horrible', 0, 2030),
-    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5, 2030),
-    Book(3, 'Master Endpoints', 'codingwithroby', 'A awesome book!', 5, 2029),
-    Book(4, 'HP1', 'Author 1', 'Book Description', 2, 2028),
-    Book(5, 'HP2', 'Author 2', 'Book Description', 3, 2027),
+    Book(1, 'Computer Science Pro', 'codingwithselva', 'horrible', 0,2013),
+    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5,2013),
+    Book(3, 'Master Endpoints', 'codingwithroby', 'A awesome book!', 5,2019),
+    Book(4, 'HP1', 'Author 1', 'Book Description', 2, 2018),
+    Book(5, 'HP2', 'Author 2', 'Book Description', 3, 2017),
     Book(6, 'HP3', 'Author 3', 'Book Description', 1, 2026)
 ]
 
@@ -55,4 +55,21 @@ async def send_books(bookreq : BookRequest):
     nbook = Book(**bookreq.model_dump())
     nbook =find_bookId(nbook)
     BOOKS.append(nbook)
+
+@app.get("/books/filterBasedOnDate/{date}")
+async def filter_based_on_date(date):
+    nbooks = filter( lambda x: x.published_date == int(date),BOOKS)
+    return list(nbooks)
+
+
+#we are using Path coz, the {id} is passed as a path variable.
+@app.delete("/books/deleteBook/{id}")
+async def delete_book(id:int = Path(ge = BOOKS[0].id ,le=BOOKS[-1].id) if(BOOKS) 
+                          else Path(ge = 0,le =0)) -> None:
+    for b in BOOKS:
+        if(b.id == id):
+            BOOKS.remove(b)
+            return
+    
+    raise IndexError("the id is out of bound.")
 
