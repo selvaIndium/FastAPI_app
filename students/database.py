@@ -1,8 +1,9 @@
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-SQL_ALCHEMY_URL  = "sqlite:///./todosApp.db"
+SQL_ALCHEMY_URL  = "sqlite:///./students.db"
 
 #setting check same thread to false, to enable concurrency.
 engine = create_engine(url=SQL_ALCHEMY_URL, connect_args={'check_same_thread' : False})

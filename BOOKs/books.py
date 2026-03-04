@@ -17,7 +17,7 @@ async def first_api():
     return {"message" : "hi selva!"}
 
 @app.get("/books")
-def getBooks():
+def getBooks(nbook = Body()):
     return BOOKS
 
 @app.get("/book/hello")
@@ -59,7 +59,4 @@ def delete_book_byCategory(book_title):
     books_toBe_deleted = filter(lambda x: x["title"] == book_title, BOOKS)
     for i in books_toBe_deleted:
         BOOKS.remove(i)
-            
-
-    
-    
+        
