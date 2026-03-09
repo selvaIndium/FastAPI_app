@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter,Depends,status
 from models import student
 from database import Base,sessionLocal
 from typing import Annotated
@@ -24,13 +24,13 @@ dependency_db = Annotated[Session, Depends()]
 def get_all(db:dependency_db):
     return db.query(student).all()
 
-@router.get("/post_students/")
+@router.post("/post_students/", status_code=status.HTTP_201_CREATED)
 def post_student(db:dependency_db, std: students):
     nstud = student(**nstud)
     db.add(nstud)
     db.commit()
 
-@router.put("/update_stud/{id}")
+@router.put("/update_stud/{id}", status_code=status.htt)
 def update_student(db:dependency_db,id:int, std: students):
     filtered_db = db.query(student).filter(student.id == id).first()
     filtered_db.name = std.name
